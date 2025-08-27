@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-#import geopandas as gpd
+import geopandas as gpd
 from shapely.geometry import Point
 import folium
 from folium import LayerControl
@@ -348,5 +348,6 @@ try:
     st.components.v1.html(html_map, height=600)
 except FileNotFoundError:
     st.error("File PJU_Interaktif_FIX.html tidak ditemukan. Pastikan file berada di direktori yang sama.")
+
 
 
