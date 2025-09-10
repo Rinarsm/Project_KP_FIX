@@ -20,7 +20,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("💡Dashboard Analisis Kondisi PJU Kabupaten Tasikmalaya")
+st.title("Dashboard Analisis Kondisi PJU Kabupaten Tasikmalaya")
 st.markdown("---")
 
 # ----------------------------------------------------
@@ -348,6 +348,7 @@ try:
     st.components.v1.html(html_map, height=600)
 except FileNotFoundError:
     st.error("File PJU_Interaktif_FIX.html tidak ditemukan. Pastikan file berada di direktori yang sama.")
+
 
 
 
