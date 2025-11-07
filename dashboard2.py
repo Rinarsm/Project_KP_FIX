@@ -96,44 +96,7 @@ st.markdown("---")
 time.sleep(0.5)
 
 # ----------------------------------------------------
-# 4. Hubungan Atribut & Kondisi
-# ----------------------------------------------------
-st.header("Visualisasi Atribut & Kondisi")
-
-# Jenis Lampu
-st.subheader("Hubungan antara Jenis Lampu dan Kondisi")
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.countplot(x="Jenis Lampu", hue="Kondisi_Biner", data=gdf_joined, palette="crest", ax=ax)
-plt.title("Hubungan Jenis Lampu dan Kondisi")
-plt.xlabel("Jenis Lampu")
-plt.ylabel("Jumlah")
-plt.xticks(rotation=45, ha="right")
-plt.legend(title="Kondisi", labels=["Baik", "Rusak"])
-for container in ax.containers:
-    ax.bar_label(container, fmt='%d', padding=2)
-st.pyplot(fig)
-
-st.markdown("---")
-time.sleep(0.5)
-
-# Jenis Tiang
-st.subheader("Hubungan antara Jenis Tiang dan Kondisi")
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.countplot(x="Jenis Tiang", hue="Kondisi_Biner", data=gdf_joined, palette="crest", ax=ax)
-plt.title("Hubungan Jenis Tiang dan Kondisi")
-plt.xlabel("Jenis Tiang")
-plt.ylabel("Jumlah")
-plt.xticks(rotation=45, ha="right")
-plt.legend(title="Kondisi", labels=["Baik", "Rusak"])
-for container in ax.containers:
-    ax.bar_label(container, fmt='%d', padding=2)
-st.pyplot(fig)
-
-st.markdown("---")
-time.sleep(0.5)
-
-# ----------------------------------------------------
-# 5. Analisis Rusak per Atribut
+# 4. Analisis Rusak per Atribut
 # ----------------------------------------------------
 st.header("Analisis PJU Rusak Berdasarkan Atribut")
 
@@ -175,119 +138,7 @@ with col2:
 st.markdown("---")
 
 # ----------------------------------------------------
-# 8. Persentase Rusak per Atribut
-# ----------------------------------------------------
-st.header("Persentase PJU Rusak per Atribut")
-
-col1, col2 = st.columns(2)
-
-# === 1. Persentase rusak per jenis lampu ===
-with col1:
-    st.subheader("Persentase Rusak per Jenis Lampu")
-
-    lampu_total = gdf_joined.groupby("Jenis Lampu")["Kondisi_Biner"].count()
-    lampu_rusak = gdf_joined.groupby("Jenis Lampu")["Kondisi_Biner"].sum()
-    lampu_persen = (lampu_rusak / lampu_total * 100).sort_values(ascending=False)
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-    lampu_persen.plot(kind="bar", color="blue", alpha=0.7, ax=ax)
-    ax.set_ylabel("Persentase Rusak (%)")
-    ax.set_title("Persentase PJU Rusak berdasarkan Jenis Lampu")
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
-
-    for i, v in enumerate(lampu_persen):
-        ax.text(i, v + 1, f"{v:.1f}%", ha='center', va='bottom', fontsize=9)
-
-    ax.set_ylim(0, lampu_persen.max() * 1.2)
-    st.pyplot(fig)
-
-# === 2. Persentase rusak per jenis tiang ===
-with col2:
-    st.subheader("Persentase Rusak per Jenis Tiang")
-
-    tiang_total = gdf_joined.groupby("Jenis Tiang")["Kondisi_Biner"].count()
-    tiang_rusak = gdf_joined.groupby("Jenis Tiang")["Kondisi_Biner"].sum()
-    tiang_persen = (tiang_rusak / tiang_total * 100).sort_values(ascending=False)
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-    tiang_persen.plot(kind="bar", color="blue", alpha=0.7, ax=ax)
-    ax.set_ylabel("Persentase Rusak (%)")
-    ax.set_title("Persentase PJU Rusak berdasarkan Jenis Tiang")
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
-
-    for i, v in enumerate(tiang_persen):
-        ax.text(i, v + 1, f"{v:.1f}%", ha='center', va='bottom', fontsize=9)
-
-    ax.set_ylim(0, tiang_persen.max() * 1.2)
-    st.pyplot(fig)
-st.markdown("---")
-
-# ----------------------------------------------------
-# 9. Stacked Bar Baik vs Rusak
-# ----------------------------------------------------
-st.header("Distribusi Kondisi PJU (Stacked Bar)")
-
-col1, col2 = st.columns(2)
-
-# === Stacked bar: Baik vs Rusak per Jenis Tiang ===
-with col1:
-    st.subheader("Baik vs Rusak per Jenis Tiang")
-
-    tiang_counts = gdf_joined.groupby(["Jenis Tiang", "Kondisi_Biner"]).size().unstack(fill_value=0)
-    tiang_counts = tiang_counts.rename(columns={0: "Baik", 1: "Rusak"})
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-    tiang_counts.plot(
-        kind="bar",
-        stacked=True,
-        color=["blue", "grey"],
-        ax=ax
-    )
-
-    ax.set_ylabel("Jumlah PJU")
-    ax.set_title("Distribusi Kondisi PJU berdasarkan Jenis Tiang")
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
-
-    # Tambahkan persentase rusak di atas bar
-    for i, total in enumerate(tiang_counts.sum(axis=1)):
-        rusak = tiang_counts.iloc[i]["Rusak"]
-        persen_rusak = (rusak / total) * 100 if total > 0 else 0
-        ax.text(i, total + 5, f"{persen_rusak:.1f}%", ha="center", va="bottom", fontsize=9, color="red")
-
-    plt.tight_layout()
-    st.pyplot(fig)
-
-# === Stacked bar: Baik vs Rusak per Jenis Lampu ===
-with col2:
-    st.subheader("Baik vs Rusak per Jenis Lampu")
-
-    lampu_counts = gdf_joined.groupby(["Jenis Lampu", "Kondisi_Biner"]).size().unstack(fill_value=0)
-    lampu_counts = lampu_counts.rename(columns={0: "Baik", 1: "Rusak"})
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-    lampu_counts.plot(
-        kind="bar",
-        stacked=True,
-        color=["blue", "grey"],
-        ax=ax
-    )
-
-    ax.set_ylabel("Jumlah PJU")
-    ax.set_title("Distribusi Kondisi PJU berdasarkan Jenis Lampu")
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
-
-    # Tambahkan persentase rusak di atas bar
-    for i, total in enumerate(lampu_counts.sum(axis=1)):
-        rusak = lampu_counts.iloc[i]["Rusak"]
-        persen_rusak = (rusak / total) * 100 if total > 0 else 0
-        ax.text(i, total + 3, f"{persen_rusak:.1f}%", ha="center", va="bottom", fontsize=9, color="red")
-
-    plt.tight_layout()
-    st.pyplot(fig)
-st.markdown("---")
-
-# ----------------------------------------------------
-# 6. Top 10 Kecamatan
+# 5. Top 10 Kecamatan
 # ----------------------------------------------------
 st.header("Visualisasi Top 10 Kecamatan")
 
@@ -300,7 +151,7 @@ pju_summary["persen_rusak"] = (pju_summary["rusak"] / pju_summary["total_pju"]) 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Top 10 Kecamatan dengan Jumlah PJU Rusak Terbanyak")
+    st.subheader("10 Teratas Kecamatan dengan Jumlah PJU Rusak Terbanyak")
     top10 = pju_summary.sort_values("rusak", ascending=False).head(10)
 
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -319,7 +170,7 @@ with col1:
     st.pyplot(fig)
 
 with col2:
-    st.subheader("Top 10 Kecamatan dengan Persentase PJU Rusak Tertinggi")
+    st.subheader("10 Teratas Kecamatan dengan Persentase PJU Rusak Tertinggi")
     top10_persen = pju_summary.sort_values("persen_rusak", ascending=False).head(10)
 
     fig, ax = plt.subplots(figsize=(12, 6)) # Ukuran disesuaikan
@@ -339,7 +190,7 @@ with col2:
 st.markdown("---")
 
 # ----------------------------------------------------
-# 7. Peta Interaktif
+# 6. Peta Interaktif
 # ----------------------------------------------------
 st.header("Peta Sebaran PJU di Kabupaten Tasikmalaya")
 try:
@@ -348,7 +199,4 @@ try:
     st.components.v1.html(html_map, height=600)
 except FileNotFoundError:
     st.error("File PJU_Interaktif_FIX.html tidak ditemukan. Pastikan file berada di direktori yang sama.")
-
-
-
 
