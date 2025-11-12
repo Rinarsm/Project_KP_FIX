@@ -53,28 +53,28 @@ gdf_joined, gdf_kecamatan = load_data("dataset_clean.csv", "maps_kabtasik.geojso
 # ----------------------------------------------------
 # 2. Ringkasan Data
 # ----------------------------------------------------
-st.header("Ringkasan Data PJU")
-col1, col2 = st.columns(2)
+# st.header("Ringkasan Data PJU")
+# col1, col2 = st.columns(2)
 
-target_mentah = 5589
-target_bersih = len(gdf_joined)
+# target_mentah = 5589
+#target_bersih = len(gdf_joined)
 
-placeholder_mentah = col1.empty()
-placeholder_bersih = col2.empty()
+#placeholder_mentah = col1.empty()
+#placeholder_bersih = col2.empty()
 
 # Animasi
-for i in range(0, 101):
-    current_mentah = int(target_mentah * (i / 100))
-    current_bersih = int(target_bersih * (i / 100))
-    placeholder_mentah.metric("Jumlah Data Mentah", f"{current_mentah} data")
-    placeholder_bersih.metric("Jumlah Data Bersih", f"{current_bersih} data")
-    time.sleep(0.01)
+# for i in range(0, 101):
+#    current_mentah = int(target_mentah * (i / 100))
+#    current_bersih = int(target_bersih * (i / 100))
+#    placeholder_mentah.metric("Jumlah Data Mentah", f"{current_mentah} data")
+#    placeholder_bersih.metric("Jumlah Data Bersih", f"{current_bersih} data")
+#    time.sleep(0.01)
 
-placeholder_mentah.metric("Jumlah Data Mentah", f"{target_mentah} data")
-placeholder_bersih.metric("Jumlah Data Bersih", f"{target_bersih} data")
+#placeholder_mentah.metric("Jumlah Data Mentah", f"{target_mentah} data")
+#placeholder_bersih.metric("Jumlah Data Bersih", f"{target_bersih} data")
 
-st.markdown("---")
-time.sleep(0.5)
+#st.markdown("---")
+#time.sleep(0.5)
 
 # ----------------------------------------------------
 # 3. Distribusi Kondisi
